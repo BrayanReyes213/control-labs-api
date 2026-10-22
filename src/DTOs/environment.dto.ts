@@ -1,6 +1,6 @@
 export interface ICreateEnvironmentDTO {
     numero: string;
     capacidad: number;
-    equipos:string;
-    televisores: string;
+    equipos:number;
+    televisores: number;
 }
