@@ -8,8 +8,8 @@ const isCreateEnvironmentDTO = (value) => {
     const environment = value;
     return (typeof environment.numero === 'string' && environment.numero.trim() !== '' &&
         typeof environment.capacidad === 'number' && Number.isInteger(environment.capacidad) &&
-        typeof environment.equipos === 'string' && environment.equipos.trim() !== '' &&
-        typeof environment.televisores === 'string' && environment.televisores.trim() !== '');
+        typeof environment.equipos === 'number' && Number.isInteger(environment.equipos) &&
+        typeof environment.televisores === 'number' && Number.isInteger(environment.televisores));
 };
 const validateEnvironmentPayload = (req, res, next) => {
     const body = req.body;
