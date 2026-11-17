@@ -1,36 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoanController = void 0;
+const container_1 = require("../container");
+const domain_error_1 = require("../errors/domain.error");
 class LoanController {
-    static createLoan = (req, res) => {
-        // TODO: llamar al servicio con req.body y responder 201 con el préstamo creado.
-        res.status(501).json({
-            success: false,
-            message: 'El registro de préstamos todavía no está implementado.'
-        });
+    static createLoan = async (req, res) => {
+        const loan = await container_1.loanService.createLoan(req.body);
+        res.status(201).json({ success: true, data: loan });
     };
-    static getLoansByFilter = (req, res) => {
-        // TODO: tomar los filtros de req.query, llamar al servicio y responder con los resultados.
-        res.status(501).json({
-            success: false,
-            message: 'La consulta del historial todavía no está implementada.'
-        });
+    static getLoansByFilter = async (req, res) => {
+        const { roomId } = req.query;
+        if (roomId !== undefined && typeof roomId !== 'string') {
+            throw new domain_error_1.DomainError('VALIDATION_ERROR', 'El filtro roomId debe ser un texto.');
+        }
+        const loans = await container_1.loanService.getLoans({ roomId });
+        res.status(200).json({ success: true, data: loans });
     };
-    static getLoanById = (req, res) => {
-        const { id } = req.params;
-        // TODO: pasar id a la operación de consulta y responder con el préstamo encontrado.
-        res.status(501).json({
-            success: false,
-            message: `La consulta del préstamo ${id} todavía no está implementada.`
-        });
+    static getLoanById = async (req, res) => {
+        const loan = await container_1.loanService.getLoanDetail(Number(req.params.id));
+        res.status(200).json({ success: true, data: loan });
     };
-    static acceptLoanInventory = (req, res) => {
-        const { id } = req.params;
-        // TODO: pasar id a la operación de aceptación y responder con el resultado.
-        res.status(501).json({
-            success: false,
-            message: `La aceptación del préstamo ${id} todavía no está implementada.`
-        });
+    static acceptLoanInventory = async (req, res) => {
+        const loan = await container_1.loanService.acceptLoan(Number(req.params.id));
+        res.status(200).json({ success: true, data: loan });
     };
 }
 exports.LoanController = LoanController;

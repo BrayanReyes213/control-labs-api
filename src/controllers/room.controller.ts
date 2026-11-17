@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-export class EnvironmentController {
-  public static getEnvironments = (req: Request, res: Response): void => {
+export class RoomController {
+  public static getRooms = (req: Request, res: Response): void => {
     // TODO: llamar al servicio y responder con el listado completo de ambientes.
     res.status(501).json({
       success: false,
@@ -9,7 +9,7 @@ export class EnvironmentController {
     });
   };
 
-  public static createEnvironment = (req: Request, res: Response): void => {
+  public static createRoom = (req: Request, res: Response): void => {
     // TODO: llamar al servicio con req.body y responder 201 con el ambiente creado.
     res.status(501).json({
       success: false,
@@ -17,7 +17,7 @@ export class EnvironmentController {
     });
   };
 
-  public static updateEnvironment = (req: Request, res: Response): void => {
+  public static updateRoom = (req: Request, res: Response): void => {
     const { id } = req.params;
     // TODO: pasar id y req.body a la operación de actualización parcial (capacidad o estado operativo).
     res.status(501).json({
