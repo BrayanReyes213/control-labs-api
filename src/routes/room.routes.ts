@@ -1,11 +1,29 @@
 import { Router } from 'express';
 import { RoomController } from '../controllers/room.controller';
-import { validateRoomPayload } from '../middlewares/validateRoom.middleware';
+import {
+  validateRoomFilters,
+  validateRoomIdParam,
+  validateRoomPayload,
+  validateRoomStatusPayload,
+  validateRoomUpdatePayload
+} from '../middlewares/validateRoom.middleware';
 
 const router = Router();
 
-router.get('/', RoomController.getRooms);
 router.post('/', validateRoomPayload, RoomController.createRoom);
-router.patch('/:id', RoomController.updateRoom);
+router.get('/', validateRoomFilters, RoomController.getRooms);
+router.get('/:id', validateRoomIdParam, RoomController.getRoomById);
+router.patch(
+  '/:id/status',
+  validateRoomIdParam,
+  validateRoomStatusPayload,
+  RoomController.updateRoomStatus
+);
+router.patch(
+  '/:id',
+  validateRoomIdParam,
+  validateRoomUpdatePayload,
+  RoomController.updateRoom
+);
 
 export default router;

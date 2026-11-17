@@ -1,6 +1,17 @@
+export type RoomStatus = 'OPERATIVO' | 'MANTENIMIENTO' | 'INACTIVO';
+
 export interface ICreateRoomDTO {
-    numero: string;
-    capacidad: number;
-    equipos:number;
-    televisores: number;
+  nombre: string;
+  bloque: string;
+  capacidadPcs: number;
+}
+
+export interface IUpdateRoomDTO {
+  nombre?: string;
+  bloque?: string;
+  capacidadPcs?: number;
+}
+
+export interface IUpdateRoomStatusDTO {
+  estado: RoomStatus;
 }
