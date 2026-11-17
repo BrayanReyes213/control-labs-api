@@ -12,5 +12,5 @@ const router = (0, express_1.Router)();
 router.use('/loans', loan_routes_1.default);
 router.use('/users', user_routes_1.default);
 router.use('/rooms', room_routes_1.default);
-router.use('/equipments', equipment_routes_1.default);
+router.use('/equipment', equipment_routes_1.default);
 exports.default = router;

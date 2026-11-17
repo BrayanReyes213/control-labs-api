@@ -1,5 +1,6 @@
 import { ICreateRoomDTO, IUpdateRoomDTO, RoomStatus } from '../dtos/room.dto';
 import { DomainError } from '../errors/domain.error';
+import { EquipmentRepository } from '../repositories/equipment.repository';
 import {
   Room,
   RoomFilters,
@@ -17,7 +18,10 @@ const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export class RoomService {
-  constructor(private readonly roomRepository: RoomRepository) {}
+  constructor(
+    private readonly roomRepository: RoomRepository,
+    private readonly equipmentRepository: EquipmentRepository
+  ) {}
 
   public async createRoom(input: ICreateRoomDTO): Promise<Room> {
     this.validateName(input.nombre);
@@ -96,6 +100,14 @@ export class RoomService {
 
     if (input.capacidadPcs !== undefined) {
       this.validateCapacity(input.capacidadPcs);
+      const installedComputers =
+        await this.equipmentRepository.countByRoomAndType(id, 'COMPUTADOR');
+      if (input.capacidadPcs < installedComputers) {
+        throw new DomainError(
+          'CONFLICT',
+          `No se puede reducir la capacidad por debajo de los ${installedComputers} computadores instalados.`
+        );
+      }
       changes.capacidadPcs = input.capacidadPcs;
     }
 

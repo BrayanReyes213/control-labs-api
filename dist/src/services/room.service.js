@@ -12,8 +12,10 @@ const MAX_BLOCK_LENGTH = 50;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 class RoomService {
     roomRepository;
-    constructor(roomRepository) {
+    equipmentRepository;
+    constructor(roomRepository, equipmentRepository) {
         this.roomRepository = roomRepository;
+        this.equipmentRepository = equipmentRepository;
     }
     async createRoom(input) {
         this.validateName(input.nombre);
@@ -70,6 +72,10 @@ class RoomService {
         }
         if (input.capacidadPcs !== undefined) {
             this.validateCapacity(input.capacidadPcs);
+            const installedComputers = await this.equipmentRepository.countByRoomAndType(id, 'COMPUTADOR');
+            if (input.capacidadPcs < installedComputers) {
+                throw new domain_error_1.DomainError('CONFLICT', `No se puede reducir la capacidad por debajo de los ${installedComputers} computadores instalados.`);
+            }
             changes.capacidadPcs = input.capacidadPcs;
         }
         if (Object.keys(changes).length === 0) {
