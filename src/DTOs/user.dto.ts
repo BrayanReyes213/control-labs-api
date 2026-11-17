@@ -1,6 +1,17 @@
+export type UserRole = 'ADMIN' | 'GUARDA' | 'INSTRUCTOR';
+
 export interface ICreateUserDTO {
-    nombre: string;
-    identificacion: number;
-    telefono:string;
-    cargo: string;
+  nombre: string;
+  email: string;
+  rol: UserRole;
+}
+
+export interface IUpdateUserDTO {
+  nombre?: string;
+  email?: string;
+  rol?: UserRole;
+}
+
+export interface IUpdateUserActiveDTO {
+  activo: boolean;
 }

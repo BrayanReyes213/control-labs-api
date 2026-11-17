@@ -1,13 +1,17 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller';
-import { validateUserPayload } from '../middlewares/validateUser.middleware';
+import {
+  validateUserActivePayload,
+  validateUserPayload,
+  validateUserUpdatePayload
+} from '../middlewares/validateUser.middleware';
 
 const router = Router();
 
-router.get('/', UserController.getUsers);
 router.post('/', validateUserPayload, UserController.createUser);
+router.get('/', UserController.getUsers);
 router.get('/:id', UserController.getUserById);
-router.patch('/:id', UserController.updateUser);
-router.patch('/:id/deactivate', UserController.deleteUser);
+router.patch('/:id', validateUserUpdatePayload, UserController.updateUser);
+router.patch('/:id/active', validateUserActivePayload, UserController.setUserActive);
 
 export default router;

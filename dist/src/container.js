@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loanService = void 0;
+exports.userService = exports.loanService = void 0;
 const in_memory_loan_repository_1 = require("./repositories/in-memory-loan.repository");
+const in_memory_user_repository_1 = require("./repositories/in-memory-user.repository");
 const loan_service_1 = require("./services/loan.service");
+const user_service_1 = require("./services/user.service");
 const loanRepository = new in_memory_loan_repository_1.InMemoryLoanRepository();
 exports.loanService = new loan_service_1.LoanService(loanRepository);
+const userRepository = new in_memory_user_repository_1.InMemoryUserRepository();
+exports.userService = new user_service_1.UserService(userRepository);

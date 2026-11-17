@@ -1,44 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const container_1 = require("../container");
+const domain_error_1 = require("../errors/domain.error");
+const USER_ROLES = ['ADMIN', 'GUARDA', 'INSTRUCTOR'];
 class UserController {
-    static getUsers = (req, res) => {
-        // TODO: llamar al servicio y responder con el listado completo de usuarios.
-        res.status(501).json({
-            success: false,
-            message: 'El listado de usuarios todavía no está implementado.'
-        });
+    static createUser = async (req, res) => {
+        const user = await container_1.userService.createUser(req.body);
+        res.status(201).json({ success: true, data: user });
     };
-    static createUser = (req, res) => {
-        // TODO: llamar al servicio con req.body y responder 201 con el usuario creado.
-        res.status(501).json({
-            success: false,
-            message: 'El registro de usuarios todavía no está implementado.'
-        });
+    static getUsers = async (req, res) => {
+        const { rol, activo, email } = req.query;
+        if (rol !== undefined &&
+            (typeof rol !== 'string' || !USER_ROLES.includes(rol))) {
+            throw new domain_error_1.DomainError('VALIDATION_ERROR', 'El filtro rol debe ser ADMIN, GUARDA o INSTRUCTOR.');
+        }
+        if (activo !== undefined &&
+            (typeof activo !== 'string' ||
+                (activo !== 'true' && activo !== 'false'))) {
+            throw new domain_error_1.DomainError('VALIDATION_ERROR', 'El filtro activo debe ser true o false.');
+        }
+        if (email !== undefined && typeof email !== 'string') {
+            throw new domain_error_1.DomainError('VALIDATION_ERROR', 'El filtro email debe ser un texto.');
+        }
+        const filters = {
+            rol: rol,
+            activo: activo === undefined ? undefined : activo === 'true',
+            email
+        };
+        const users = await container_1.userService.getUsers(filters);
+        res.status(200).json({ success: true, data: users });
     };
-    static getUserById = (req, res) => {
-        const { id } = req.params;
-        // TODO: pasar id a la operación de consulta y responder con el usuario encontrado.
-        res.status(501).json({
-            success: false,
-            message: `La consulta del usuario ${id} todavía no está implementada.`
-        });
+    static getUserById = async (req, res) => {
+        const user = await container_1.userService.getUserDetail(req.params.id);
+        res.status(200).json({ success: true, data: user });
     };
-    static updateUser = (req, res) => {
-        const { id } = req.params;
-        // TODO: pasar id y req.body a la operación de actualización parcial (rol, estado o contraseña).
-        res.status(501).json({
-            success: false,
-            message: `La actualización del usuario ${id} todavía no está implementada.`
-        });
+    static updateUser = async (req, res) => {
+        const user = await container_1.userService.updateUser(req.params.id, req.body);
+        res.status(200).json({ success: true, data: user });
     };
-    static deleteUser = (req, res) => {
-        const { id } = req.params;
-        // TODO: eliminación lógica: internamente se actualiza el estado del usuario, no se borra el registro.
-        res.status(501).json({
-            success: false,
-            message: `La eliminación del usuario ${id} todavía no está implementada.`
-        });
+    static setUserActive = async (req, res) => {
+        const user = await container_1.userService.setUserActive(req.params.id, req.body.activo);
+        res.status(200).json({ success: true, data: user });
     };
 }
 exports.UserController = UserController;
